@@ -11,9 +11,9 @@ import Search from './components/search';
 import Chat from './components/chat';
 import { FullScreenPreview } from './components/fullScreenPreview';
 
-export default function Dashboard(props: { disableCustomTheme?: boolean }) {
+export default function Dashboard() {
   return (
-    <AppTheme {...props} >
+    <AppTheme  >
       <CssBaseline enableColorScheme />
       <Box sx={{ display: 'flex' }}>
         <AppAppBar/>
