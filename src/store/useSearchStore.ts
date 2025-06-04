@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 
+import chat from '@/app/dashboard/components/dummy.json'
+
 type FileWithPreview = {
   file: File;
   previewUrl: string;
@@ -17,6 +19,7 @@ type SearchEntry = {
 
 type SearchStore = {
   prompt: string;
+  loading:boolean;
   files: FileWithPreview[];
   searchHistory: SearchEntry[];
   fullScreenPreview: string | null;
@@ -32,6 +35,7 @@ type SearchStore = {
 export const useSearchStore = create<SearchStore>((set, get) => ({
   prompt: '',
   files: [],
+  loading:false,
   searchHistory: [],
   fullScreenPreview: null,
 
@@ -69,12 +73,28 @@ export const useSearchStore = create<SearchStore>((set, get) => ({
       files: [...files],
       user:Type.USER
     };
+    const match = chat.find(entry => entry.user.toLowerCase() === prompt.toLowerCase());
+    const reply =  match ? match.bot : "No se encontró ningún mensaje coincidente.";
 
-    set((state) => ({
-      searchHistory: [...state.searchHistory, newEntry],
+    const botEntry = {
+      prompt:reply,
+      files:[],
+      user:Type.ADMIN
+    }
+    set((state)=>({
+      loading:true,
+      searchHistory: [...state.searchHistory,newEntry],
       prompt: '',
       files: [],
+    }))
+    setTimeout(() => {
+      set((state) => ({
+      searchHistory: [...state.searchHistory,botEntry],
+      prompt: '',
+      files: [],
+      loading:false
     }));
+    }, 1000);
   },
 
   reset: () => {

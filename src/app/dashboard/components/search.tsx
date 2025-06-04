@@ -13,21 +13,35 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ColorModeIconDropdown from "../../../shared-theme/ColorModeIconDropdown";
 import Image from "next/image";
-import { KeyboardArrowRight, SearchRounded } from "@mui/icons-material";
+import {
+  KeyboardArrowRight,
+  KeyboardDoubleArrowUp,
+  SearchRounded,
+} from "@mui/icons-material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useState } from "react";
 import {
+  Autocomplete,
   Card,
   CardMedia,
   FormControl,
+  FormHelperText,
   Grid,
   InputAdornment,
+  InputLabel,
   LinearProgress,
   OutlinedInput,
+  Select,
+  SelectChangeEvent,
+  Skeleton,
+  Slider,
   Stack,
+  SwipeableDrawer,
+  TextField,
   Typography,
 } from "@mui/material";
 import { useSearchStore } from "@/store/useSearchStore";
+import { grey } from "@mui/material/colors";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: "flex",
@@ -65,22 +79,68 @@ type SearchEntry = {
   files: FileWithPreview[];
 };
 
+const Root = styled("div")(({ theme }) => ({
+  height: "100%",
+  backgroundColor: grey[100],
+  ...theme.applyStyles("dark", {
+    backgroundColor: (theme.vars || theme).palette.background.default,
+  }),
+}));
+
+const StyledBox = styled("div")(({ theme }) => ({
+  backgroundColor: "#fff",
+  ...theme.applyStyles("dark", {
+    backgroundColor: grey[800],
+  }),
+}));
+
+const Puller = styled("div")(({ theme }) => ({
+  width: 30,
+  height: 6,
+  backgroundColor: grey[300],
+  borderRadius: 3,
+  position: "absolute",
+  top: 8,
+  left: "calc(50% - 15px)",
+  ...theme.applyStyles("dark", {
+    backgroundColor: grey[900],
+  }),
+}));
+
 export default function Search() {
   const [open, setOpen] = useState(false);
+  const [Task, setTask] = useState("");
+  const [Size, setSize] = useState("");
+  const [negativePrompt, setNegativePrompt] = useState('')
+  const [temp, setTemp] = useState(0.5)
+
+  const handleTemp = (event: Event, value: number | number[], activeThumb: number) => {
+    if (typeof value === "number") {
+      setTemp(value);
+    }
+  };
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
+  
+
+  const handleTaskChange = (event: SelectChangeEvent) => {
+    setTask(event.target.value);
+  };
+  const handleSizeChange = (event: SelectChangeEvent) => {
+    setSize(event.target.value);
+  };
 
   const {
-  prompt,
-  files,
-  handleFileChange,
-  handleRemove,
-  handleSearch,
-  setPrompt,
-  openPreview
-} = useSearchStore();
+    prompt,
+    files,
+    handleFileChange,
+    handleRemove,
+    handleSearch,
+    setPrompt,
+    openPreview,
+  } = useSearchStore();
 
   return (
     <>
@@ -94,10 +154,12 @@ export default function Search() {
           bgcolor: "transparent",
           backgroundImage: "none",
           mb: "calc(var(--template-frame-height, 0px) + 28px)",
+          transition:'bottom 1s ease'
         }}
         style={{
           top: "auto",
-          bottom: 0,
+          bottom: open ? 400 : -20
+          ,
         }}
       >
         <Container maxWidth="lg">
@@ -111,7 +173,10 @@ export default function Search() {
                   "&:hover .remove-btn": { opacity: 1 },
                 }}
               >
-                <Card sx={{ width: "100%", height: "100%", p: 1 }} onClick={()=>openPreview(fileObj.previewUrl)}>
+                <Card
+                  sx={{ width: "100%", height: "100%", p: 1 }}
+                  onClick={() => openPreview(fileObj.previewUrl)}
+                >
                   <CardMedia
                     component="img"
                     image={fileObj.previewUrl}
@@ -152,10 +217,10 @@ export default function Search() {
                   }}
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
-                  onKeyDown={(event)=>{
-                    if (event.key === 'Enter' || event.keyCode === 13) {
-                      handleSearch()
-    }
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.keyCode === 13) {
+                      handleSearch();
+                    }
                   }}
                 />
               </FormControl>
@@ -191,46 +256,156 @@ export default function Search() {
               >
                 Search
               </Button>
-            </Box>
-            <Box sx={{ display: { xs: "flex", md: "none" }, gap: 1 }}>
-              <ColorModeIconDropdown size="medium" />
-              <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
-                <MenuIcon />
-              </IconButton>
-              <Drawer
-                anchor="top"
-                open={open}
-                onClose={toggleDrawer(false)}
-                PaperProps={{
-                  sx: {
-                    top: "var(--template-frame-height, 0px)",
-                  },
-                }}
+              <Button
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+                onClick={toggleDrawer(!open)}
               >
-                <Box sx={{ p: 2, backgroundColor: "background.default" }}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "flex-end",
-                    }}
-                  >
-                    <IconButton onClick={toggleDrawer(false)}>
-                      <CloseRoundedIcon />
-                    </IconButton>
-                  </Box>
-
-                  <MenuItem>Features</MenuItem>
-                  <MenuItem>Highlights</MenuItem>
-                  <MenuItem>
-                    <Button color="primary" variant="text" size="small">
-                      Try Model <KeyboardArrowRight />
-                    </Button>
-                  </MenuItem>
-                </Box>
-              </Drawer>
+                <KeyboardDoubleArrowUp />
+              </Button>
+            </Box>
+            <Box
+              sx={{
+                display: { xs: "flex", md: "none" },
+                gap: 1,
+                alignItems: "center",
+              }}
+            >
+              <Button
+                component="label"
+                role={undefined}
+                variant="outlined"
+                tabIndex={-1}
+              >
+                <CloudUploadIcon />
+                <VisuallyHiddenInput
+                  type="file"
+                  onChange={handleFileChange}
+                  multiple
+                />
+              </Button>
+              <Button
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+                onClick={handleSearch}
+              >
+                <SearchRounded />
+              </Button>
+              <Button
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+                onClick={toggleDrawer(!open)}
+              >
+                <KeyboardDoubleArrowUp />
+              </Button>
             </Box>
           </StyledToolbar>
         </Container>
+        <Stack spacing={1} sx={{ width: "100%", position: "relative" }}>
+          <Stack sx={{p:2,position: "absolute",width: "100%"}}>
+            <Stack
+              sx={(theme) => ({
+                
+                background: "white",
+                width: "100%",
+                display: "grid",
+                gridTemplateColumns: {
+                  xs: "1fr",
+                  sm: "1fr 1fr",
+                },
+                gridTemplateRows: {
+                  xs: "1fr 1fr 3fr 1fr",
+                  sm: "1fr 2fr 1fr",
+                },
+                gap: 2,
+                p: 2,
+                backdropFilter: "blur(16px) saturate(180%)",
+                WebkitBackdropFilter: "blur(16px) saturate(180%)",
+                backgroundColor: "rgba(17, 25, 40, 0.75)",
+                borderRadius: "12px",
+                border: "1px solid rgba(255, 255, 255, 0.125)",
+                ...theme.applyStyles("light", {
+                  backdropFilter: "blur(16px) saturate(180%)",
+                  WebkitBackdropFilter: "blur(16px) saturate(180%)",
+                  backgroundColor: "rgba(255, 255, 255, 0.65)",
+                  borderRadius: "12px",
+                  border: "1px solid rgba(209, 213, 219, 0.7)",
+                }),
+              })}
+            >
+              <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <InputLabel id="Task">Task</InputLabel>
+                <Select
+                  labelId="Task"
+                  id="Task1"
+                  value={Task}
+                  label="Task"
+                  onChange={handleTaskChange}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={10}>Ten</MenuItem>
+                  <MenuItem value={20}>Twenty</MenuItem>
+                  <MenuItem value={30}>Thirty</MenuItem>
+                </Select>
+                <FormHelperText>With label + helper text</FormHelperText>
+              </FormControl>
+              <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <InputLabel id="Size">Size</InputLabel>
+                <Select
+                  labelId="Size"
+                  id="Size1"
+                  value={Size}
+                  label="Size"
+                  onChange={handleSizeChange}
+                >
+                  <MenuItem value="" disabled>
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={10}>Ten</MenuItem>
+                  <MenuItem value={20}>Twenty</MenuItem>
+                  <MenuItem value={30}>Thirty</MenuItem>
+                </Select>
+                <FormHelperText>With label + helper text</FormHelperText>
+              </FormControl>
+          <TextField
+          id="outlined-negative-prompt-static"
+          label="Negative Prompt"
+          multiline
+          rows={6}
+          value={negativePrompt}
+          onChange={(e)=>setNegativePrompt(e.target.value)}
+          sx={{flexGrow:1,height:'100%',m:1,gridColumn:'span 2'}}
+          variant="outlined"
+        />
+        <Stack sx={{m:1,gridColumn:'span 2'}}>
+                <InputLabel id="Temp">Temp</InputLabel>
+          <FormControl>
+
+  <Slider
+    value={temp}
+    onChange={handleTemp}
+    defaultValue={0.00000005}
+    step={0.05}
+    marks
+    min={0.0}
+    max={1.0}
+    getAriaValueText={(value)=>value.toString()}
+    valueLabelDisplay="auto"
+  />
+        </FormControl>
+        </Stack>
+              
+            </Stack>
+          </Stack>
+        </Stack>
       </AppBar>
     </>
   );

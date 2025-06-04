@@ -1,0 +1,140 @@
+[
+  {
+    "user": "Good morning!",
+    "bot": "¡Buenos días!"
+  },
+  {
+    "user": "Thank you for your help!",
+    "bot": "¡Gracias por tu ayuda!"
+  },
+  {
+    "user": "Good night!",
+    "bot": "¡Buenas noches!"
+  },
+  {
+    "user": "How are you?",
+    "bot": "¿Cómo estás?"
+  },
+  {
+    "user": "I'm fine, thank you.",
+    "bot": "Estoy bien, gracias."
+  },
+  {
+    "user": "What's your name?",
+    "bot": "¿Cómo te llamas?"
+  },
+  {
+    "user": "My name is John.",
+    "bot": "Me llamo John."
+  },
+  {
+    "user": "Nice to meet you.",
+    "bot": "Mucho gusto."
+  },
+  {
+    "user": "Where are you from?",
+    "bot": "¿De dónde eres?"
+  },
+  {
+    "user": "I'm from the United States.",
+    "bot": "Soy de los Estados Unidos."
+  },
+  {
+    "user": "What time is it?",
+    "bot": "¿Qué hora es?"
+  },
+  {
+    "user": "Can you help me?",
+    "bot": "¿Puedes ayudarme?"
+  },
+  {
+    "user": "I don't understand.",
+    "bot": "No entiendo."
+  },
+  {
+    "user": "Please speak slowly.",
+    "bot": "Por favor, habla despacio."
+  },
+  {
+    "user": "Where is the bathroom?",
+    "bot": "¿Dónde está el baño?"
+  },
+  {
+    "user": "How much does this cost?",
+    "bot": "¿Cuánto cuesta esto?"
+  },
+  {
+    "user": "I would like a coffee, please.",
+    "bot": "Quisiera un café, por favor."
+  },
+  {
+    "user": "The food is delicious!",
+    "bot": "¡La comida está deliciosa!"
+  },
+  {
+    "user": "I'm lost.",
+    "bot": "Estoy perdido."
+  },
+  {
+    "user": "Call the police!",
+    "bot": "¡Llama a la policía!"
+  },
+  {
+    "user": "I need a doctor.",
+    "bot": "Necesito un médico."
+  },
+  {
+    "user": "Can I pay with a credit card?",
+    "bot": "¿Puedo pagar con tarjeta de crédito?"
+  },
+  {
+    "user": "I'm looking for a hotel.",
+    "bot": "Estoy buscando un hotel."
+  },
+  {
+    "user": "Have a nice day!",
+    "bot": "¡Que tengas un buen día!"
+  },
+  {
+    "user": "See you later!",
+    "bot": "¡Hasta luego!"
+  },
+  {
+    "user": "Goodbye!",
+    "bot": "¡Adiós!"
+  },
+  {
+    "user": "Fuck Off",
+    "bot": "************",
+    "censored": "Vete a la mierda"
+  },
+  {
+    "user": "Fucking Amazing",
+    "bot": "******* increíble",
+    "censored": "jodidamente increíble"
+  },
+  {
+    "user": "Hey",
+    "bot": "Hola"
+  },
+  {
+    "user": "can you help me get a bus",
+    "bot": "¿Puedes ayudarme a conseguir un autobús?"
+  },
+  {
+    "user": "or train",
+    "bot": "¿O tren?"
+  },
+  {
+    "user": "Harry potter is a bad movie",
+    "bot": "Harry Potter es una mala película."
+  },
+  {
+    "user": "i feel sad",
+    "bot": "Me siento triste."
+  },
+  {
+    "user": "do you drink",
+    "bot": "¿Bebes?"
+  }
+]
